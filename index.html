@@ -1,0 +1,954 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GradeFlow - Student Management</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+font-family:Inter,Arial,sans-serif;
+background:#f4f7fc;
+color:#172b4d;
+min-height:100vh;
+}
+
+button,input{font:inherit}
+button{cursor:pointer;border:none}
+
+header{
+height:75px;
+background:white;
+border-bottom:1px solid #e5eaf2;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 6%;
+position:sticky;
+top:0;
+z-index:5;
+}
+
+.logo{
+font-size:24px;
+font-weight:800;
+color:#15345d;
+letter-spacing:-1px;
+}
+
+.logo span{color:#3478e5}
+
+.header-right{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.header-label{
+font-size:12px;
+color:#64748b;
+}
+
+.logout{
+background:#edf2f9;
+color:#284568;
+padding:10px 16px;
+border-radius:8px;
+font-size:12px;
+}
+
+.page{
+max-width:1200px;
+margin:auto;
+padding:40px 5%;
+}
+
+.screen{display:none}
+.screen.active{display:block;animation:fade .5s ease}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(15px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+.hero{
+text-align:center;
+padding:65px 15px 45px;
+}
+
+.hero h1{
+font-size:38px;
+color:#15345d;
+letter-spacing:-1.5px;
+}
+
+.hero p{
+color:#718096;
+font-size:14px;
+margin-top:13px;
+}
+
+.portal-cards{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:22px;
+max-width:800px;
+margin:0 auto;
+}
+
+.portal-card{
+background:white;
+border:1px solid #e3eaf4;
+border-radius:18px;
+padding:35px;
+box-shadow:0 8px 30px #243b5310;
+transition:.3s;
+}
+
+.portal-card:hover{
+transform:translateY(-7px);
+box-shadow:0 15px 35px #243b5320;
+}
+
+.portal-icon{
+width:55px;height:55px;
+border-radius:14px;
+display:grid;
+place-items:center;
+font-size:25px;
+margin-bottom:22px;
+}
+
+.teacher-icon{background:#e8f0ff}
+.student-icon{background:#e2f7ef}
+
+.portal-card h2{
+font-size:20px;
+margin-bottom:10px;
+}
+
+.portal-card p{
+color:#7b899e;
+font-size:13px;
+line-height:1.7;
+min-height:45px;
+}
+
+.btn{
+padding:12px 18px;
+border-radius:8px;
+font-weight:600;
+font-size:12px;
+transition:.2s;
+}
+
+.btn:hover{transform:translateY(-2px)}
+
+.blue{
+background:#3478e5;
+color:white;
+}
+
+.blue:hover{background:#2463c6}
+
+.green{
+background:#168b67;
+color:white;
+}
+
+.light{
+background:#edf2f9;
+color:#294566;
+}
+
+.danger{
+background:#fff0f0;
+color:#d84d4d;
+}
+
+.full{width:100%;margin-top:20px}
+
+.login-box{
+background:white;
+border:1px solid #e5eaf2;
+box-shadow:0 12px 40px #243b5310;
+border-radius:18px;
+max-width:430px;
+margin:25px auto;
+padding:35px;
+}
+
+.login-box h2{
+font-size:24px;
+margin-bottom:9px;
+}
+
+.login-box p{
+font-size:13px;
+color:#8190a5;
+margin-bottom:25px;
+}
+
+label{
+display:block;
+font-size:12px;
+font-weight:600;
+color:#536780;
+margin:16px 0 8px;
+}
+
+input{
+width:100%;
+padding:13px;
+border:1px solid #dce4ef;
+background:#f9fbfe;
+border-radius:8px;
+outline:none;
+color:#183452;
+transition:.2s;
+}
+
+input:focus{
+border-color:#3478e5;
+box-shadow:0 0 0 3px #3478e518;
+}
+
+.error{
+color:#d84d4d;
+font-size:12px;
+margin-top:12px;
+}
+
+.top-title{
+margin-bottom:25px;
+}
+
+.top-title h1{
+font-size:28px;
+color:#15345d;
+}
+
+.top-title p{
+font-size:13px;
+color:#8290a5;
+margin-top:8px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+margin-bottom:25px;
+}
+
+.stat{
+background:white;
+border:1px solid #e5eaf2;
+border-radius:13px;
+padding:22px;
+transition:.25s;
+}
+
+.stat:hover{transform:translateY(-4px)}
+
+.stat small{
+font-size:11px;
+color:#8290a5;
+font-weight:600;
+}
+
+.stat h2{
+font-size:27px;
+margin-top:13px;
+color:#1e497e;
+}
+
+.panel{
+background:white;
+border:1px solid #e5eaf2;
+border-radius:14px;
+padding:24px;
+margin-bottom:22px;
+}
+
+.panel-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.panel-head h2{font-size:17px}
+
+.actions{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.search{max-width:280px}
+
+.table-wrap{overflow-x:auto}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:650px;
+}
+
+th{
+background:#f5f8fd;
+color:#7d8da4;
+font-size:10px;
+text-align:left;
+padding:14px;
+}
+
+td{
+padding:15px 14px;
+font-size:12px;
+border-bottom:1px solid #edf0f5;
+}
+
+tr:hover td{background:#f9fbff}
+
+.grade{
+background:#e4f4ec;
+color:#168b67;
+padding:6px 11px;
+border-radius:20px;
+font-weight:700;
+}
+
+.empty{
+text-align:center;
+padding:40px;
+color:#8a99ad;
+}
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+z-index:20;
+background:#10233f80;
+align-items:center;
+justify-content:center;
+padding:15px;
+backdrop-filter:blur(5px);
+}
+
+.modal-box{
+width:min(550px,100%);
+max-height:90vh;
+overflow:auto;
+background:white;
+border-radius:17px;
+padding:28px;
+animation:fade .3s ease;
+}
+
+.modal-box h2{margin-bottom:8px}
+
+.modal-box>p{
+color:#8290a5;
+font-size:12px;
+margin-bottom:20px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:5px 15px;
+}
+
+.modal-actions{
+display:flex;
+gap:10px;
+margin-top:22px;
+}
+
+.modal-actions button{flex:1}
+
+.result-card{
+background:white;
+border:1px solid #e3eaf4;
+border-radius:18px;
+padding:28px;
+box-shadow:0 10px 35px #243b5310;
+}
+
+.result-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+border-bottom:1px solid #edf0f5;
+padding-bottom:22px;
+margin-bottom:22px;
+}
+
+.result-header h2{font-size:23px}
+
+.result-header p{
+font-size:12px;
+color:#8290a5;
+margin-top:7px;
+}
+
+.result-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:14px;
+margin-bottom:25px;
+}
+
+.result-item{
+background:#f3f7fd;
+border-radius:12px;
+padding:20px;
+}
+
+.result-item small{
+color:#8290a5;
+font-size:11px;
+}
+
+.result-item h2{
+font-size:25px;
+color:#245da5;
+margin-top:10px;
+}
+
+.big-grade{
+font-size:50px;
+font-weight:800;
+color:#168b67;
+}
+
+footer{
+text-align:center;
+padding:25px;
+color:#94a1b3;
+font-size:11px;
+}
+
+@media(max-width:750px){
+.stats{grid-template-columns:repeat(2,1fr)}
+.portal-cards{grid-template-columns:1fr}
+.hero h1{font-size:29px}
+.result-grid{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:450px){
+.form-grid{grid-template-columns:1fr}
+.page{padding:25px 4%}
+.header-label{display:none}
+.result-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">GRADE<span>FLOW.</span></div>
+<div class="header-right">
+<span class="header-label" id="headerLabel">ACADEMIC MANAGEMENT PORTAL</span>
+<button class="logout" id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
+</div>
+</header>
+
+<!-- HOME -->
+<section class="screen active" id="home">
+<div class="page">
+<div class="hero">
+<h1>Academic Results Portal</h1>
+<p>A smarter way to manage and view student academic performance.</p>
+</div>
+
+<div class="portal-cards">
+
+<div class="portal-card">
+<div class="portal-icon teacher-icon">👨‍🏫</div>
+<h2>Teacher Portal</h2>
+<p>Manage student information, enter marks, calculate grades and control academic records.</p>
+<button class="btn blue full" onclick="showScreen('teacherLogin')">Teacher Login →</button>
+</div>
+
+<div class="portal-card">
+<div class="portal-icon student-icon">🎓</div>
+<h2>Student Portal</h2>
+<p>View your individual marks, total, average, percentage and final grade using your roll number.</p>
+<button class="btn green full" onclick="showScreen('studentLogin')">View My Results →</button>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- TEACHER LOGIN -->
+<section class="screen" id="teacherLogin">
+<div class="page">
+<div class="login-box">
+<h2>Teacher Login</h2>
+<p>Authorized teacher access only.</p>
+
+<label>Username</label>
+<input id="teacherUser" placeholder="Enter username">
+
+<label>Password</label>
+<input id="teacherPass" type="password" placeholder="Enter password">
+
+<button class="btn blue full" onclick="teacherLogin()">Login to Dashboard →</button>
+<button class="btn light full" onclick="showScreen('home')">← Back</button>
+<div class="error" id="teacherError"></div>
+</div>
+</div>
+</section>
+
+<!-- STUDENT LOGIN -->
+<section class="screen" id="studentLogin">
+<div class="page">
+<div class="login-box">
+<h2>Student Results</h2>
+<p>No password required. Enter your registered roll number.</p>
+
+<label>Roll Number</label>
+<input id="studentRoll" placeholder="Enter your roll number" onkeydown="if(event.key==='Enter')viewResult()">
+
+<button class="btn green full" onclick="viewResult()">View My Results →</button>
+<button class="btn light full" onclick="showScreen('home')">← Back</button>
+<div class="error" id="studentError"></div>
+</div>
+</div>
+</section>
+
+<!-- TEACHER DASHBOARD -->
+<section class="screen" id="dashboard">
+<div class="page">
+
+<div class="top-title">
+<h1>Teacher Dashboard</h1>
+<p>Welcome back! Manage your student academic records.</p>
+</div>
+
+<div class="stats">
+<div class="stat"><small>TOTAL STUDENTS</small><h2 id="total">0</h2></div>
+<div class="stat"><small>CLASS AVERAGE</small><h2 id="average">0%</h2></div>
+<div class="stat"><small>TOP GRADE</small><h2 id="top">—</h2></div>
+<div class="stat"><small>PASS RATE</small><h2 id="pass">0%</h2></div>
+</div>
+
+<div class="panel">
+<div class="panel-head">
+<h2>Student Records</h2>
+<div class="actions">
+<button class="btn green" onclick="exportCSV()">↓ Export CSV</button>
+<button class="btn blue" onclick="openModal()">+ Add Student</button>
+</div>
+</div>
+
+<input class="search" id="search" placeholder="Search name or roll number..." oninput="render()">
+
+<div class="table-wrap" style="margin-top:20px">
+<table>
+<thead>
+<tr>
+<th>STUDENT NAME</th>
+<th>ROLL NUMBER</th>
+<th>TOTAL</th>
+<th>AVERAGE</th>
+<th>PERCENTAGE</th>
+<th>GRADE</th>
+<th>ACTIONS</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+</div>
+</div>
+
+<div class="panel">
+<h2 style="font-size:16px;margin-bottom:14px">Grading Criteria</h2>
+<p style="font-size:12px;color:#718096;line-height:2.2">
+A+ : 90–100% &nbsp; | &nbsp;
+A : 80–89.99% &nbsp; | &nbsp;
+B : 70–79.99% &nbsp; | &nbsp;
+C : 60–69.99% &nbsp; | &nbsp;
+D : 50–59.99% &nbsp; | &nbsp;
+F : Below 50%
+<br>
+Each subject is out of 100 marks. Passing requires at least 50 in every subject.
+</p>
+</div>
+
+</div>
+</section>
+
+<!-- STUDENT RESULT -->
+<section class="screen" id="studentResult">
+<div class="page">
+
+<div class="top-title">
+<h1>My Academic Results</h1>
+<p>Your personal academic performance report.</p>
+</div>
+
+<div class="result-card" id="resultContent"></div>
+
+<button class="btn light" style="margin-top:20px" onclick="showScreen('studentLogin')">← Back to Student Portal</button>
+
+</div>
+</section>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal" id="modal">
+<div class="modal-box">
+<h2 id="modalTitle">Add Student</h2>
+<p>Enter student details and subject marks.</p>
+
+<div class="form-grid">
+<div>
+<label>Student Name</label>
+<input id="name" placeholder="Student name">
+</div>
+<div>
+<label>Roll Number</label>
+<input id="roll" placeholder="Roll number">
+</div>
+<div>
+<label>Subject 1</label>
+<input id="m1" type="number" min="0" max="100" placeholder="0 - 100">
+</div>
+<div>
+<label>Subject 2</label>
+<input id="m2" type="number" min="0" max="100" placeholder="0 - 100">
+</div>
+<div>
+<label>Subject 3</label>
+<input id="m3" type="number" min="0" max="100" placeholder="0 - 100">
+</div>
+<div>
+<label>Subject 4</label>
+<input id="m4" type="number" min="0" max="100" placeholder="0 - 100">
+</div>
+</div>
+
+<div style="background:#f1f6fd;padding:13px;border-radius:9px;margin-top:18px;font-size:12px;color:#536780" id="preview">
+Enter all marks to preview results.
+</div>
+
+<div class="modal-actions">
+<button class="btn light" onclick="closeModal()">Cancel</button>
+<button class="btn blue" onclick="saveStudent()">Save Student</button>
+</div>
+</div>
+</div>
+
+<footer>GRADEFLOW © 2026 | STUDENT ACADEMIC MANAGEMENT SYSTEM</footer>
+
+<script>
+let students=JSON.parse(localStorage.getItem("gradeflow_students")||"[]");
+let editId=null;
+
+function saveData(){
+localStorage.setItem("gradeflow_students",JSON.stringify(students));
+}
+
+function showScreen(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+window.scrollTo(0,0);
+}
+
+function setHeader(label,logged){
+document.getElementById("headerLabel").textContent=label;
+document.getElementById("logoutBtn").style.display=logged?"block":"none";
+}
+
+function teacherLogin(){
+let u=document.getElementById("teacherUser").value.trim();
+let p=document.getElementById("teacherPass").value;
+
+if(u==="teacher"&&p==="admin123"){
+sessionStorage.setItem("gf_teacher","true");
+setHeader("TEACHER ADMIN",true);
+showScreen("dashboard");
+render();
+}else{
+document.getElementById("teacherError").textContent="Incorrect username or password.";
+}
+}
+
+function logout(){
+sessionStorage.removeItem("gf_teacher");
+setHeader("ACADEMIC MANAGEMENT PORTAL",false);
+document.getElementById("teacherPass").value="";
+showScreen("home");
+}
+
+function grade(p){
+if(p>=90)return "A+";
+if(p>=80)return "A";
+if(p>=70)return "B";
+if(p>=60)return "C";
+if(p>=50)return "D";
+return "F";
+}
+
+function calc(marks){
+let total=marks.reduce((a,b)=>a+b,0);
+let average=total/4;
+let percentage=total/400*100;
+return {total,average,percentage,grade:grade(percentage)};
+}
+
+function openModal(id=null){
+if(sessionStorage.getItem("gf_teacher")!=="true"){
+alert("Teacher login required.");
+return;
+}
+
+editId=id;
+
+["name","roll","m1","m2","m3","m4"].forEach(x=>{
+document.getElementById(x).value="";
+});
+
+if(id!==null){
+let s=students.find(x=>x.id===id);
+if(!s)return;
+document.getElementById("name").value=s.name;
+document.getElementById("roll").value=s.roll;
+s.marks.forEach((m,i)=>{
+document.getElementById("m"+(i+1)).value=m;
+});
+}
+
+document.getElementById("modalTitle").textContent=id===null?"Add Student":"Edit Student";
+document.getElementById("modal").style.display="flex";
+updatePreview();
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+editId=null;
+}
+
+function getMarks(){
+return [1,2,3,4].map(i=>{
+let v=document.getElementById("m"+i).value;
+return v===""?null:Number(v);
+});
+}
+
+function updatePreview(){
+let marks=getMarks();
+let preview=document.getElementById("preview");
+
+if(marks.some(m=>m===null)){
+preview.textContent="Enter all marks to preview results.";
+return;
+}
+
+if(marks.some(m=>!Number.isFinite(m)||m<0||m>100)){
+preview.textContent="Marks must be between 0 and 100.";
+return;
+}
+
+let r=calc(marks);
+preview.textContent=`Total: ${r.total}/400 | Average: ${r.average.toFixed(2)} | Percentage: ${r.percentage.toFixed(2)}% | Grade: ${r.grade}`;
+}
+
+[1,2,3,4].forEach(i=>{
+document.getElementById("m"+i).addEventListener("input",updatePreview);
+});
+
+function saveStudent(){
+if(sessionStorage.getItem("gf_teacher")!=="true"){
+alert("Unauthorized access.");
+return;
+}
+
+let name=document.getElementById("name").value.trim();
+let roll=document.getElementById("roll").value.trim();
+let marks=getMarks();
+
+if(!name||!roll||marks.some(m=>m===null)){
+alert("Fill all fields.");
+return;
+}
+
+if(marks.some(m=>!Number.isFinite(m)||m<0||m>100)){
+alert("Marks must be between 0 and 100.");
+return;
+}
+
+if(students.some(s=>s.roll.toLowerCase()===roll.toLowerCase()&&s.id!==editId)){
+alert("Roll number already exists.");
+return;
+}
+
+let student={
+id:editId??Date.now(),
+name,roll,marks
+};
+
+if(editId!==null){
+students=students.map(s=>s.id===editId?student:s);
+}else{
+students.push(student);
+}
+
+saveData();
+closeModal();
+render();
+}
+
+function deleteStudent(id){
+if(sessionStorage.getItem("gf_teacher")!=="true")return;
+
+if(confirm("Delete this student record?")){
+students=students.filter(s=>s.id!==id);
+saveData();
+render();
+}
+}
+
+function render(){
+let q=document.getElementById("search").value.toLowerCase();
+
+let list=students.filter(s=>
+s.name.toLowerCase().includes(q)||s.roll.toLowerCase().includes(q)
+);
+
+document.getElementById("table").innerHTML=list.length?
+list.map(s=>{
+let r=calc(s.marks);
+
+return `<tr>
+<td><b>${safe(s.name)}</b></td>
+<td>${safe(s.roll)}</td>
+<td>${r.total}/400</td>
+<td>${r.average.toFixed(2)}</td>
+<td>${r.percentage.toFixed(2)}%</td>
+<td><span class="grade">${r.grade}</span></td>
+<td>
+<div class="actions">
+<button class="btn light" onclick="openModal(${s.id})">Edit</button>
+<button class="btn danger" onclick="deleteStudent(${s.id})">Delete</button>
+</div>
+</td>
+</tr>`;
+}).join(""):`<tr><td colspan="7" class="empty">No student records available.</td></tr>`;
+
+let count=students.length;
+let avg=count?students.reduce((a,s)=>a+calc(s.marks).percentage,0)/count:0;
+let passed=students.filter(s=>s.marks.every(m=>m>=50)).length;
+let high=count?Math.max(...students.map(s=>calc(s.marks).percentage)):-1;
+
+document.getElementById("total").textContent=count;
+document.getElementById("average").textContent=avg.toFixed(1)+"%";
+document.getElementById("top").textContent=high<0?"—":grade(high);
+document.getElementById("pass").textContent=count?(passed/count*100).toFixed(1)+"%":"0%";
+}
+
+function safe(value){
+return String(value).replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+})[c]);
+}
+
+function viewResult(){
+let roll=document.getElementById("studentRoll").value.trim();
+
+let s=students.find(x=>x.roll.toLowerCase()===roll.toLowerCase());
+
+if(!s){
+document.getElementById("studentError").textContent="No student found. Check your roll number.";
+return;
+}
+
+let r=calc(s.marks);
+
+document.getElementById("resultContent").innerHTML=`
+<div class="result-header">
+<div>
+<h2>${safe(s.name)}</h2>
+<p>ROLL NUMBER: ${safe(s.roll)}</p>
+</div>
+<div class="big-grade">${r.grade}</div>
+</div>
+
+<div class="result-grid">
+<div class="result-item"><small>TOTAL MARKS</small><h2>${r.total}/400</h2></div>
+<div class="result-item"><small>AVERAGE</small><h2>${r.average.toFixed(2)}</h2></div>
+<div class="result-item"><small>PERCENTAGE</small><h2>${r.percentage.toFixed(2)}%</h2></div>
+</div>
+
+<h3 style="font-size:16px;margin-bottom:15px">Subject-wise Performance</h3>
+<div class="table-wrap">
+<table style="min-width:0">
+<thead><tr><th>SUBJECT</th><th>MARKS</th><th>STATUS</th></tr></thead>
+<tbody>
+${s.marks.map((m,i)=>`
+<tr>
+<td>Subject ${i+1}</td>
+<td><b>${m}/100</b></td>
+<td><span class="grade">${m>=50?"PASS":"FAIL"}</span></td>
+</tr>`).join("")}
+</tbody>
+</table>
+</div>
+
+<p style="margin-top:20px;color:#718096;font-size:12px">
+Overall result: <b style="color:${s.marks.every(m=>m>=50)?"#168b67":"#d84d4d"}">${s.marks.every(m=>m>=50)?"PASS":"NEEDS IMPROVEMENT"}</b>
+</p>
+`;
+
+document.getElementById("studentError").textContent="";
+showScreen("studentResult");
+}
+
+function exportCSV(){
+if(!students.length){
+alert("No records to export.");
+return;
+}
+
+let rows=[
+["Name","Roll Number","Subject 1","Subject 2","Subject 3","Subject 4","Total","Average","Percentage","Grade"],
+...students.map(s=>{
+let r=calc(s.marks);
+return [s.name,s.roll,...s.marks,r.total,r.average.toFixed(2),r.percentage.toFixed(2)+"%",r.grade];
+})
+];
+
+let csv=rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+let blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+let url=URL.createObjectURL(blob);
+let a=document.createElement("a");
+a.href=url;
+a.download="GradeFlow_Results.csv";
+a.click();
+URL.revokeObjectURL(url);
+}
+
+if(sessionStorage.getItem("gf_teacher")==="true"){
+setHeader("TEACHER ADMIN",true);
+showScreen("dashboard");
+render();
+}
+</script>
+
+</body>
+</html>
